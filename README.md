@@ -1,0 +1,1 @@
+Exercise practicing 'git pull'
