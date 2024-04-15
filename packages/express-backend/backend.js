@@ -30,11 +30,6 @@ const users = {
       name: "Dennis",
       job: "Bartender",
     },
-    {
-      id: "qwe123",
-      job: "Zookeeper",
-      name: "Cindy",
-    },
   ],
 };
 
@@ -55,6 +50,8 @@ const addUser = (user) => {
   users["users_list"].push(user);
   return user;
 };
+
+app.use(express.json());
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
@@ -99,8 +96,6 @@ app.delete("/users/:id", (req, res) => {
     res.status(404).send("User not found.");
   }
 });
-
-app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
