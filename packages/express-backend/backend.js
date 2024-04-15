@@ -30,6 +30,11 @@ const users = {
       name: "Dennis",
       job: "Bartender",
     },
+    {
+      id: "qwe123",
+      job: "Zookeeper",
+      name: "Cindy",
+    },
   ],
 };
 
@@ -59,6 +64,17 @@ app.get("/users/:id", (req, res) => {
   } else {
     res.send(result);
   }
+});
+
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
+
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.send();
 });
 
 app.use(express.json());
