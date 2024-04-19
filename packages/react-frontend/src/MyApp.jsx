@@ -8,16 +8,42 @@ function MyApp() {
     const promise = fetch("http://localhost:8000/users");
     return promise;
   }
+
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
+    const userToDelete = characters[index];
+
+    fetch(`http://localhost:8000/users/${userToDelete.id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // If the response is not 2xx, throw an error
+          if (response.status === 404) {
+            throw new Error("User not found. No delete performed.");
+          }
+          throw new Error("Network response was not ok.");
+        } // If the delete was successful, update the state
+        const updated = characters.filter((character, i) => i !== index);
+        setCharacters(updated);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }
 
   function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } else {
+          throw new Error("Failed to insert user: " + response.statusText);
+        }
+      })
+      .then((newPerson) => setCharacters([...characters, newPerson]))
       .catch((error) => {
         console.log(error);
       });
